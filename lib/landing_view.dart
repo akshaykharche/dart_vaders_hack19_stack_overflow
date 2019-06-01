@@ -118,7 +118,7 @@ class _LandingPageState extends State<LandingPage> {
                 _buildCounts(questions[index]),
                 Container(
                   padding: EdgeInsets.all(5.0),
-                  width: 350.0,
+                  width: 330.0,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
