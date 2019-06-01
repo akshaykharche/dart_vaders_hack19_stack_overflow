@@ -49,6 +49,8 @@ flutter:
     - assets/stack-overflow.png
     - assets/so-logo-s.jpg
     - assets/imageedit_1_4358849406.png
+    - assets/dummy-user.png
+    
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

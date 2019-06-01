@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import './details_view.dart';
+
 class LandingPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,6 +17,12 @@ class LandingPage extends StatefulWidget {
   final textController = TextEditingController();
   var data;
   FocusNode focusOnSearch = FocusNode();
+
+  List<Map<dynamic, dynamic>> answers = [
+    {
+      'voteCount': 2,
+    }
+  ];
 
   void submit() {
     _formKey.currentState.save();
@@ -50,7 +58,10 @@ class LandingPage extends StatefulWidget {
         decoration: InputDecoration(
             hintText: 'your question here',
             labelText: 'question',
-            suffixIcon: Icon(Icons.mic)));
+            suffixIcon: IconButton(
+              icon: Icon(Icons.mic),
+              onPressed: () {},
+            )));
   }
 
   _buildTags() {
@@ -74,6 +85,62 @@ class LandingPage extends StatefulWidget {
     );
   }
 
+  Widget _buildAnswerCard(BuildContext context, int index) {
+    return answers.length > 0
+        ? Card(
+            child: Row(
+            children: <Widget>[
+              Container(
+                width: 70.0,
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    new SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: new IconButton(
+                          padding: new EdgeInsets.all(0.0),
+                          icon: new Icon(Icons.arrow_drop_up, size: 50.0),
+                          onPressed: () {},
+                        )),
+                    Text('votes'),
+                    new SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: new IconButton(
+                          padding: new EdgeInsets.all(0.0),
+                          icon: new Icon(Icons.arrow_drop_down, size: 50.0),
+                          onPressed: () {},
+                        ))
+                  ],
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        // Navigator.pushNamed(context, '/details', arguments: {'question': 123});
+                        Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context) => 
+                      DetailsView(
+                        answers[index]['questionDetails']
+                      )
+                    ));
+                      },
+                      child: Text('question link here'),
+                    ),
+                    Text('tags here'),
+                    Text('ansers'),
+                  ],
+                ),
+              )
+            ],
+          ))
+        : Center(child: Text('No results found, please refine search'));
+  }
+
   @override
   Widget build(BuildContext context) {
     print(data);
@@ -87,34 +154,9 @@ class LandingPage extends StatefulWidget {
             ),
             _buildSearchInputField(),
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  Card(
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.arrow_upward),
-                        Icon(Icons.arrow_downward)
-                      ],
-                    ),
-                  ),
-                  //   child: Row(
-                  //     children: <Widget>[
-                  //       Container(
-                  //         height: 200.0,
-                  //         margin: EdgeInsets.all(10.0),
-                  //         decoration: BoxDecoration(
-                  //             border: Border.all(color: Colors.black12)),
-                  //         child: Column(
-                  //           children: <Widget>[
-                  //             Icon(Icons.arrow_upward),
-                  //             Icon(Icons.arrow_downward)
-                  //           ],
-                  //         ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // )
-                ],
+              child: ListView.builder(
+                itemBuilder: _buildAnswerCard,
+                itemCount: answers.length,
               ),
             )
           ],
