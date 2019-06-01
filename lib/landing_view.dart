@@ -18,8 +18,15 @@ class _LandingPageState extends State<LandingPage> {
   final textController = TextEditingController();
   var data;
   FocusNode focusOnSearch = FocusNode();
+  bool isSearchClicked = false;
 
   List answers = [{}];
+
+  void _searchClick() {
+    setState(() {
+      isSearchClicked = !isSearchClicked;
+    });
+  }
 
   void submit() {
     _formKey.currentState.save();
@@ -32,44 +39,39 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   _buildSearchInputField() {
-    return TextFormField(
-        controller: textController,
-        focusNode: focusOnSearch,
-        keyboardType: TextInputType.text,
-        validator: (value) {
-          if (value.isEmpty) {
-            return 'Please enter a question to search.';
-          }
-        },
-        onFieldSubmitted: (value) {
-          // FocusScope.of(context).requestFocus(focusOn);
-        },
-        decoration: InputDecoration(
-            hintText: 'your question here',
-            labelText: 'question',
-            suffixIcon: IconButton(
-              icon: Icon(Icons.mic),
-              onPressed: () {},
-            )));
+    return isSearchClicked
+        ? TextFormField(
+            controller: textController,
+            focusNode: focusOnSearch,
+            keyboardType: TextInputType.text,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Please enter a question to search.';
+              }
+            },
+            onFieldSubmitted: (value) {
+              // FocusScope.of(context).requestFocus(focusOn);
+            },
+            decoration: InputDecoration(
+                hintText: 'your question here',
+                labelText: 'question',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.mic),
+                  onPressed: () {},
+                )))
+        : Container();
   }
 
-  _buildTags() {
+  _buildQuestionButton() {
     return Row(
       children: <Widget>[
         RaisedButton(
+          child: Text('Ask Questions'),
           onPressed: () {
-            // api call to get newest questions
+            _searchClick();
           },
-          child: Text(
-            'Newest',
-          ),
-        ),
-        RaisedButton(
-          onPressed: () {
-            // api call to get ananswered questions
-          },
-          child: Text('Unanswered'),
-        ),
+          color: Colors.blue[100],
+        )
       ],
     );
   }
@@ -79,14 +81,18 @@ class _LandingPageState extends State<LandingPage> {
     var answerCount = answers[index]["answer_count"];
     var viewCount = answers[index]["view_count"];
 
-    return Card(
-        child: Row(
+    return Container(
+      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
+      child: Card(
+      child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         Container(
           padding: EdgeInsets.all(10.0),
           child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Row(
                 children: <Widget>[
@@ -113,7 +119,9 @@ class _LandingPageState extends State<LandingPage> {
                   ),
                 ],
               ),
-              InkWell(
+              Container(
+                padding: EdgeInsets.all(5.0),
+                child: InkWell(
                 onTap: () {
                   Navigator.push(
                       context,
@@ -121,19 +129,27 @@ class _LandingPageState extends State<LandingPage> {
                           builder: (BuildContext context) =>
                               DetailsView(answers[index]['questionDetails'])));
                 },
-                child: Text(answers[index]['title']),
+                child: Text(answers[index]['title'], style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontSize: 14.0
+                ),),
               ),
-              RaisedButton(
+              ),
+              Container(
+                padding: EdgeInsets.all(5.0),
+                child: RaisedButton(
                 child: Text(
                   answers[index]['tags'][0],
                 ),
                 onPressed: () {},
               )
+              )
             ],
           ),
         )
       ],
-    ));
+    )),
+    );
   }
 
   Widget _buildBodyWithSpinner(BuildContext context) {
@@ -147,6 +163,21 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
+  _buildQuestionsHeader() {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Colors.grey,
+      ),
+      child: Text(
+        'Latest Questions',
+        textAlign: TextAlign.center,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+      ),
+    );
+  }
+
   _buildBody(BuildContext context, List questionsData) {
     answers = questionsData;
 
@@ -154,11 +185,9 @@ class _LandingPageState extends State<LandingPage> {
         padding: EdgeInsets.all(15.0),
         child: Column(
           children: <Widget>[
-            _buildTags(),
-            Row(
-              children: <Widget>[Text('Answers below'), Icon(Icons.search)],
-            ),
+            _buildQuestionButton(),
             _buildSearchInputField(),
+            _buildQuestionsHeader(),
             Expanded(
               child: ListView.builder(
                 itemBuilder: _buildAnswerCard, // _buildAnswerCard,
