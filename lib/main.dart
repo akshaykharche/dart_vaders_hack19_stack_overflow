@@ -10,10 +10,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.orangeAccent,
-              title: Text('Stack Overflow',),
+          appBar: AppBar(
+            backgroundColor: Colors.orangeAccent,
+            title: Text(
+              'Stack Overflow',
             ),
-            body: LandingPage()));
+          ),
+          body: LandingPage(),
+        ),
+        );
   }
 }

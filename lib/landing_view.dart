@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
+import './details_view.dart';
+
 class LandingPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -50,7 +52,10 @@ class _LandingPageState extends State<LandingPage> {
         decoration: InputDecoration(
             hintText: 'your question here',
             labelText: 'question',
-            suffixIcon: Icon(Icons.mic)));
+            suffixIcon: IconButton(
+              icon: Icon(Icons.mic),
+              onPressed: () {},
+            )));
   }
 
   _buildTags() {
@@ -108,7 +113,18 @@ class _LandingPageState extends State<LandingPage> {
                 padding: EdgeInsets.all(10.0),
                 child: Column(
                   children: <Widget>[
-                    Text('question link here'),
+                    InkWell(
+                      onTap: () {
+                        // Navigator.pushNamed(context, '/details', arguments: {'question': 123});
+                        Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context) => 
+                      DetailsView(
+                        answers[index]['questionDetails']
+                      )
+                    ));
+                      },
+                      child: Text('question link here'),
+                    ),
                     Text('tags here'),
                     Text('ansers'),
                   ],
