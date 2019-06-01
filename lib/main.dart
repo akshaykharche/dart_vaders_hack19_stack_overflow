@@ -1,141 +1,74 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
-import './landing_view.dart';
-import './details_view.dart'; 
+import './dashboard.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(new MaterialApp(
+    theme: ThemeData(primaryColor: Colors.red, accentColor: Colors.white),
+    home: SplashScreen()));
 
-class MyApp extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        routes: <String, WidgetBuilder>{
-          Notes.routeName: (BuildContext context) => new Notes()
-        },
-        home: Builder(
-            builder: (context) => Scaffold(
-                appBar: AppBar(
-                  backgroundColor: Colors.black,
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        'assets/imageedit_1_4358849406.png',
-                        fit: BoxFit.contain,
-                        height: 20,
-                        width: 50,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(
-                            'Stack Overflow',
-                            style: new TextStyle(
-                              fontSize: 16.0,
-                              color: Colors.white,
-                            ),
-                          )),
-                    ],
-                  ),
-                ),
-                drawer: new Drawer(
-                  child: new Column(
-                    children: <Widget>[
-                      new UserAccountsDrawerHeader(
-                        accountName: new Text(
-                          "Rahul Bhavsar",
-                          style: new TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w500),
-                        ),
-                        accountEmail: new Text(
-                          "rahulbhavsar13@gmail.com",
-                          style: new TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w500),
-                        ),
-                        otherAccountsPictures: <Widget>[
-                          new GestureDetector(
-                            onTap: () => _onTapOtherAccounts(context),
-                            child: new Semantics(
-                              label: 'Switch Account',
-                              child: new CircleAvatar(
-                                backgroundColor: Colors.brown,
-                                child: new Text('RB'),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      new Column(
-                        children: <Widget>[
-                          new ListTile(
-                            leading: new Icon(Icons.help),
-                            title: new Text('Help & feedback'),
-                            onTap: () => _onListTileTap(context),
-                          ),
-                          new Divider(),
-                          new ListTile(
-                            leading: new Icon(Icons.settings),
-                            title: new Text('Settings'),
-                            onTap: () => _onListTileTap(context),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                body: LandingPage())));
+  _SplashScreenState createState() => new _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(
+        Duration(seconds: 2),
+        () => Navigator.of(context).pushReplacement(
+            new MaterialPageRoute(builder: (BuildContext context) => MyApp())));
   }
-}
-
-_onListTileTap(BuildContext context) {
-  print("called");
-  Navigator.of(context).pop();
-  showDialog<Null>(
-    context: context,
-    child: new AlertDialog(
-      title: const Text('Not Implemented'),
-      actions: <Widget>[
-        new FlatButton(
-          child: const Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-_onTapOtherAccounts(BuildContext context) {
-  Navigator.of(context).pop();
-  showDialog<Null>(
-    context: context,
-    child: new AlertDialog(
-      title: const Text('Profile is not implemented.'),
-      actions: <Widget>[
-        new FlatButton(
-          child: const Text('OK'),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    ),
-  );
-}
-
-class Notes extends StatelessWidget {
-  static final String routeName = '/notes';
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: new Drawer(),
-      appBar: new AppBar(
-        title: new Text('Notes'),
-      ),
-      body: new Center(
-        child: new Text('Notes', style: new TextStyle(fontSize: 24.0)),
+      body: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          Container(
+            decoration: BoxDecoration(color: Colors.orangeAccent),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/stack-overflow.png',
+                        fit: BoxFit.contain,
+                        height: 70,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(padding: EdgeInsets.only(top: 20.0)),
+                    Text("Learn, Share, Build with us",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold))
+                  ],
+                ),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
