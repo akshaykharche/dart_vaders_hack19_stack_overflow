@@ -15,6 +15,12 @@ class _LandingPageState extends State<LandingPage> {
   final textController = TextEditingController();
   FocusNode focusOnSearch = FocusNode();
 
+  List<Map<dynamic, dynamic>> answers = [
+    {
+      'voteCount': 2,
+    }
+  ];
+
   void submit() {
     _formKey.currentState.save();
   }
@@ -49,21 +55,68 @@ class _LandingPageState extends State<LandingPage> {
 
   _buildTags() {
     return Row(
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    // api call to get newest questions
-                  },
-                  child: Text('Newest',),
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            // api call to get newest questions
+          },
+          child: Text(
+            'Newest',
+          ),
+        ),
+        RaisedButton(
+          onPressed: () {
+            // api call to get ananswered questions
+          },
+          child: Text('Unanswered'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnswerCard(BuildContext context, int index) {
+    return answers.length > 0
+        ? Card(
+            child: Row(
+            children: <Widget>[
+              Container(
+                width: 70.0,
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    new SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: new IconButton(
+                          padding: new EdgeInsets.all(0.0),
+                          icon: new Icon(Icons.arrow_drop_up, size: 50.0),
+                          onPressed: () {},
+                        )),
+                    Text('votes'),
+                    new SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: new IconButton(
+                          padding: new EdgeInsets.all(0.0),
+                          icon: new Icon(Icons.arrow_drop_down, size: 50.0),
+                          onPressed: () {},
+                        ))
+                  ],
                 ),
-                RaisedButton(
-                  onPressed: () {
-                    // api call to get ananswered questions
-                  },
-                  child: Text('Unanswered'),
+              ),
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    Text('question link here'),
+                    Text('tags here'),
+                    Text('ansers'),
+                  ],
                 ),
-              ],
-            );
+              )
+            ],
+          ))
+        : Center(child: Text('No results found, please refine search'));
   }
 
   @override
@@ -78,34 +131,9 @@ class _LandingPageState extends State<LandingPage> {
             ),
             _buildSearchInputField(),
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  Card(
-                    child: Column(
-                      children: <Widget>[
-                        Icon(Icons.arrow_upward),
-                        Icon(Icons.arrow_downward)
-                      ],
-                    ),
-                  ),
-                  //   child: Row(
-                  //     children: <Widget>[
-                  //       Container(
-                  //         height: 200.0,
-                  //         margin: EdgeInsets.all(10.0),
-                  //         decoration: BoxDecoration(
-                  //             border: Border.all(color: Colors.black12)),
-                  //         child: Column(
-                  //           children: <Widget>[
-                  //             Icon(Icons.arrow_upward),
-                  //             Icon(Icons.arrow_downward)
-                  //           ],
-                  //         ),
-                  //       )
-                  //     ],
-                  //   ),
-                  // )
-                ],
+              child: ListView.builder(
+                itemBuilder: _buildAnswerCard,
+                itemCount: answers.length,
               ),
             )
           ],
