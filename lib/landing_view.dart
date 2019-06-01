@@ -13,20 +13,21 @@ class LandingPage extends StatefulWidget {
   }
 }
 
- class _LandingPageState extends State<LandingPage> {
+class _LandingPageState extends State<LandingPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final textController = TextEditingController();
   var data;
   FocusNode focusOnSearch = FocusNode();
 
-  List answers=[{}];
+  List answers = [{}];
 
   void submit() {
     _formKey.currentState.save();
   }
 
   Future<http.Response> getQuestions() {
-    String url = 'https://api.stackexchange.com/2.2/search/advanced?key=U4DMV*8nvpm3EOpvf69Rxw((&site=stackoverflow&order=desc&sort=activity&user=anuradha&filter=default';
+    String url =
+        'https://api.stackexchange.com/2.2/search/advanced?key=U4DMV*8nvpm3EOpvf69Rxw((&site=stackoverflow&order=desc&sort=activity&user=anuradha&filter=default';
     return http.get(url);
   }
 
@@ -74,40 +75,65 @@ class LandingPage extends StatefulWidget {
   }
 
   Widget _buildAnswerCard(BuildContext context, int index) {
-    print(answers[index]['tags'][0]);
+    var tagCount = answers[index]["score"];
+    var answerCount = answers[index]["answer_count"];
+    var viewCount = answers[index]["view_count"];
+
     return Card(
-            child: Row(
+        child: Row(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.all(10.0),
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                width: 70.0,
-                padding: EdgeInsets.all(10.0),
-                child: Votes(),
+              Row(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                    child: Text(
+                      '$tagCount vote(s)',
+                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                    child: Text(
+                      '$answerCount answer(s)',
+                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                    child: Text(
+                      '$viewCount view(s)',
+                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    InkWell(
-                      onTap: () {
-                        // Navigator.pushNamed(context, '/details', arguments: {'question': 123});
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (BuildContext context) => DetailsView(
-                                    answers[index]['questionDetails'])));
-                      },
-                      child: Text(answers[index]['title']),
-                    ),
-                    RaisedButton(
-                      child: Text(answers[index]['tags'][0],),
-                      onPressed: () {},
-                    ),
-                    Text('ansers'),
-                  ],
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              DetailsView(answers[index]['questionDetails'])));
+                },
+                child: Text(answers[index]['title']),
+              ),
+              RaisedButton(
+                child: Text(
+                  answers[index]['tags'][0],
                 ),
+                onPressed: () {},
               )
             ],
-          ));
+          ),
+        )
+      ],
+    ));
   }
 
   Widget _buildBodyWithSpinner(BuildContext context) {
