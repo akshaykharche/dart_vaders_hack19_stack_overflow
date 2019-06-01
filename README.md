@@ -1,4 +1,4 @@
-# Flutter Hackathon - theme - STack Overflow
+# Flutter Hackathon - theme - Stack Overflow
 
 A project created to implement a view like question list screen of stack overflow as per theme of #hack19
 
