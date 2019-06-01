@@ -43,12 +43,12 @@ class MyApp extends StatelessWidget {
                       new UserAccountsDrawerHeader( 
                         decoration: new BoxDecoration(color: Colors.orange),                       
                         accountName: new Text(
-                          "Rahul Bhavsar",
+                          "User name",
                           style: new TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w500),
                         ),
                         accountEmail: new Text(
-                          "rahulbhavsar13@gmail.com",
+                          "username@email.com",
                           style: new TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w500),
                         ),
@@ -68,8 +68,14 @@ class MyApp extends StatelessWidget {
                       new Column(
                         children: <Widget>[
                           new ListTile(
-                            leading: new Icon(Icons.help),
-                            title: new Text('Help & feedback'),
+                            leading: new Icon(Icons.table_chart),
+                            title: new Text('Tags'),
+                            onTap: () => _onListTileTap(context),
+                          ),
+                          new Divider(),
+                          new ListTile(
+                            leading: new Icon(Icons.tag_faces),
+                            title: new Text('User Search'),
                             onTap: () => _onListTileTap(context),
                           ),
                           new Divider(),
@@ -92,10 +98,10 @@ _onListTileTap(BuildContext context) {
   showDialog<Null>(
     context: context,
     child: new AlertDialog(
-      title: const Text('Not Implemented'),
+      title: Text('Coming soon'),
       actions: <Widget>[
         new FlatButton(
-          child: const Text('OK'),
+          child: Text('OK'),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -110,7 +116,7 @@ _onTapOtherAccounts(BuildContext context) {
   showDialog<Null>(
     context: context,
     child: new AlertDialog(
-      title: const Text('Profile is not implemented.'),
+      title: const Text('Coming soon'),
       actions: <Widget>[
         new FlatButton(
           child: const Text('OK'),
