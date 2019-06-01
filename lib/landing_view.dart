@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import './details_view.dart';
+import './votes.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -27,18 +28,6 @@ class LandingPage extends StatefulWidget {
   Future<http.Response> getQuestions() {
     String url = 'https://api.stackexchange.com/2.2/search/advanced?key=U4DMV*8nvpm3EOpvf69Rxw((&site=stackoverflow&order=desc&sort=activity&user=anuradha&filter=default';
     return http.get(url);
-  }
-
-  Widget _buildBody(BuildContext context, int index) {
-    return StreamBuilder(
-      stream: getQuestions().asStream(),
-      builder: (BuildContext context, response) {
-        print(response);
-        return response.hasData
-            ? _buildAnswerCard(context, json.decode(response.data.body)['items'])
-            : Center(child: CircularProgressIndicator());
-      },
-    );
   }
 
   _buildSearchInputField() {
@@ -84,38 +73,15 @@ class LandingPage extends StatefulWidget {
     );
   }
 
-  Widget _buildAnswerCard(BuildContext context, List dataList) {
-    var index = dataList.length;
-    print('dataList');
-    print(dataList);
-    return (answers.length > 0)
-        ? Card(
+  Widget _buildAnswerCard(BuildContext context, int index) {
+    print(answers[index]['tags'][0]);
+    return Card(
             child: Row(
             children: <Widget>[
               Container(
                 width: 70.0,
                 padding: EdgeInsets.all(10.0),
-                child: Column(
-                  children: <Widget>[
-                    new SizedBox(
-                        height: 50.0,
-                        width: 50.0,
-                        child: new IconButton(
-                          padding: new EdgeInsets.all(0.0),
-                          icon: new Icon(Icons.arrow_drop_up, size: 50.0),
-                          onPressed: () {},
-                        )),
-                    Text('votes'),
-                    new SizedBox(
-                        height: 50.0,
-                        width: 50.0,
-                        child: new IconButton(
-                          padding: new EdgeInsets.all(0.0),
-                          icon: new Icon(Icons.arrow_drop_down, size: 50.0),
-                          onPressed: () {},
-                        ))
-                  ],
-                ),
+                child: Votes(),
               ),
               Container(
                 padding: EdgeInsets.all(10.0),
@@ -130,21 +96,34 @@ class LandingPage extends StatefulWidget {
                                 builder: (BuildContext context) => DetailsView(
                                     answers[index]['questionDetails'])));
                       },
-                      child: Text('question link here'),
+                      child: Text(answers[index]['title']),
                     ),
-                    Text('tags here'),
+                    RaisedButton(
+                      child: Text(answers[index]['tags'][0],),
+                      onPressed: () {},
+                    ),
                     Text('ansers'),
                   ],
                 ),
               )
             ],
-          ))
-        : Center(child: Text('No results found, please refine search'));
+          ));
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print(data);
+  Widget _buildBodyWithSpinner(BuildContext context) {
+    return StreamBuilder(
+      stream: getQuestions().asStream(),
+      builder: (BuildContext context, response) {
+        return response.hasData
+            ? _buildBody(context, json.decode(response.data.body)['items'])
+            : Center(child: CircularProgressIndicator());
+      },
+    );
+  }
+
+  _buildBody(BuildContext context, List questionsData) {
+    answers = questionsData;
+
     return Container(
         padding: EdgeInsets.all(15.0),
         child: Column(
@@ -156,11 +135,16 @@ class LandingPage extends StatefulWidget {
             _buildSearchInputField(),
             Expanded(
               child: ListView.builder(
-                itemBuilder: _buildBody, // _buildAnswerCard,
+                itemBuilder: _buildAnswerCard, // _buildAnswerCard,
                 itemCount: answers.length,
               ),
             )
           ],
         ));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildBodyWithSpinner(context);
   }
 }
