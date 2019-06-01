@@ -12,13 +12,13 @@ class LandingPage extends StatefulWidget {
   }
 }
 
-class _LandingPageState extends State<LandingPage> {
+ class _LandingPageState extends State<LandingPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final textController = TextEditingController();
+  var data;
   FocusNode focusOnSearch = FocusNode();
 
   List answers=[{}];
-  var data;
 
   void submit() {
     _formKey.currentState.save();
@@ -144,6 +144,7 @@ class _LandingPageState extends State<LandingPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(data);
     return Container(
         padding: EdgeInsets.all(15.0),
         child: Column(
