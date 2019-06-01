@@ -17,23 +17,28 @@ class _LandingPageState extends State<LandingPage> {
   final textController = TextEditingController();
   FocusNode focusOnSearch = FocusNode();
 
-  List<Map<dynamic, dynamic>> answers = [
-    {
-      'voteCount': 2,
-    }
-  ];
+  List answers=[{}];
+  var data;
 
   void submit() {
     _formKey.currentState.save();
   }
 
-  Future getData() async {
-    http.Response response = await http.get(
-        Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
-        headers: {"Accept": "application/json"});
+  Future<http.Response> getQuestions() {
+    String url = 'https://api.stackexchange.com/2.2/search/advanced?key=U4DMV*8nvpm3EOpvf69Rxw((&site=stackoverflow&order=desc&sort=activity&user=anuradha&filter=default';
+    return http.get(url);
+  }
 
-    List data = jsonDecode(response.body);
-    print(data[1]['title']);
+  Widget _buildBody(BuildContext context, int index) {
+    return StreamBuilder(
+      stream: getQuestions().asStream(),
+      builder: (BuildContext context, response) {
+        print(response);
+        return response.hasData
+            ? _buildAnswerCard(context, json.decode(response.data.body)['items'])
+            : Center(child: CircularProgressIndicator());
+      },
+    );
   }
 
   _buildSearchInputField() {
@@ -79,8 +84,11 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildAnswerCard(BuildContext context, int index) {
-    return answers.length > 0
+  Widget _buildAnswerCard(BuildContext context, List dataList) {
+    var index = dataList.length;
+    print('dataList');
+    print(dataList);
+    return (answers.length > 0)
         ? Card(
             child: Row(
             children: <Widget>[
@@ -116,12 +124,11 @@ class _LandingPageState extends State<LandingPage> {
                     InkWell(
                       onTap: () {
                         // Navigator.pushNamed(context, '/details', arguments: {'question': 123});
-                        Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context) => 
-                      DetailsView(
-                        answers[index]['questionDetails']
-                      )
-                    ));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) => DetailsView(
+                                    answers[index]['questionDetails'])));
                       },
                       child: Text('question link here'),
                     ),
@@ -148,7 +155,7 @@ class _LandingPageState extends State<LandingPage> {
             _buildSearchInputField(),
             Expanded(
               child: ListView.builder(
-                itemBuilder: _buildAnswerCard,
+                itemBuilder: _buildBody, // _buildAnswerCard,
                 itemCount: answers.length,
               ),
             )
