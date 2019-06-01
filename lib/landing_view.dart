@@ -10,22 +10,28 @@ class LandingPage extends StatefulWidget {
   }
 }
 
-class _LandingPageState extends State<LandingPage> {
+ class _LandingPageState extends State<LandingPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final textController = TextEditingController();
+  var data;
   FocusNode focusOnSearch = FocusNode();
 
   void submit() {
     _formKey.currentState.save();
   }
 
-  Future getData() async {
-    http.Response response = await http.get(
-        Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
-        headers: {"Accept": "application/json"});
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
 
-    List data = jsonDecode(response.body);
-    print(data[1]['title']);
+  Future _getData() async {
+    http.Response response = await http.get(
+        Uri.encodeFull(
+            "https://api.stackexchange.com/2.2/search/advanced?key=U4DMV*8nvpm3EOpvf69Rxw((&site=stackoverflow&order=desc&sort=activity&user=anuradha&filter=default"),
+        headers: {"Accept": "application/json"});
+    data = jsonDecode(response.body);
   }
 
   _buildSearchInputField() {
@@ -49,25 +55,28 @@ class _LandingPageState extends State<LandingPage> {
 
   _buildTags() {
     return Row(
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () {
-                    // api call to get newest questions
-                  },
-                  child: Text('Newest',),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    // api call to get ananswered questions
-                  },
-                  child: Text('Unanswered'),
-                ),
-              ],
-            );
+      children: <Widget>[
+        RaisedButton(
+          onPressed: () {
+            // api call to get newest questions
+          },
+          child: Text(
+            'Newest',
+          ),
+        ),
+        RaisedButton(
+          onPressed: () {
+            // api call to get ananswered questions
+          },
+          child: Text('Unanswered'),
+        ),
+      ],
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    print(data);
     return Container(
         padding: EdgeInsets.all(15.0),
         child: Column(
