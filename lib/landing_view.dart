@@ -48,9 +48,6 @@ class _LandingPageState extends State<LandingPage> {
                 return 'Please enter a question to search.';
               }
             },
-            onFieldSubmitted: (value) {
-              // FocusScope.of(context).requestFocus(focusOn);
-            },
             decoration: InputDecoration(
                 hintText: 'your question here',
                 labelText: 'question',
@@ -120,6 +117,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               Container(
                 padding: EdgeInsets.all(5.0),
+                width: 350.0,
                 child: InkWell(
                 onTap: () {
                   Navigator.push(
