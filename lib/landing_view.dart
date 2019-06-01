@@ -11,11 +11,9 @@ class LandingPage extends StatefulWidget {
     return _LandingPageState();
   }
 }
-
 class _LandingPageState extends State<LandingPage> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   final textController = TextEditingController();
-  var data;
   FocusNode focusOnSearch = FocusNode();
   bool isSearchClicked = false;
 
@@ -72,80 +70,83 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildAnswerCard(BuildContext context, int index) {
-    var tagCount = answers[index]["score"];
-    var answerCount = answers[index]["answer_count"];
-    var viewCount = answers[index]["view_count"];
+  _buildCounts(data) {
+    var tagCount = data["score"];
+    var answerCount = data["answer_count"];
+    var viewCount = data["view_count"];
+    return Row(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          child: Text(
+            '$tagCount vote(s)',
+            style: TextStyle(fontSize: 12.0, color: Colors.black54),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          child: Text(
+            '$answerCount answer(s)',
+            style: TextStyle(fontSize: 12.0, color: Colors.black54),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          child: Text(
+            '$viewCount view(s)',
+            style: TextStyle(fontSize: 12.0, color: Colors.black54),
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget _buildAnswerCard(BuildContext context, int index) {
     return Container(
       padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Card(
-      child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
+          child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                _buildCounts(answers[index]),
+                Container(
+                  padding: EdgeInsets.all(5.0),
+                  width: 350.0,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) => DetailsView(
+                                  answers[index]['questionDetails'])));
+                    },
                     child: Text(
-                      '$tagCount vote(s)',
-                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
+                      answers[index]['title'],
+                      style:
+                          TextStyle(color: Colors.blueAccent, fontSize: 14.0),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    child: Text(
-                      '$answerCount answer(s)',
-                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                    child: Text(
-                      '$viewCount view(s)',
-                      style: TextStyle(fontSize: 12.0, color: Colors.black54),
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                padding: EdgeInsets.all(5.0),
-                width: 350.0,
-                child: InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (BuildContext context) =>
-                              DetailsView(answers[index]['questionDetails'])));
-                },
-                child: Text(answers[index]['title'], style: TextStyle(
-                  color: Colors.blueAccent,
-                  fontSize: 14.0
-                ),),
-              ),
-              ),
-              Container(
-                padding: EdgeInsets.all(5.0),
-                child: RaisedButton(
-                child: Text(
-                  answers[index]['tags'][0],
                 ),
-                onPressed: () {},
-              )
-              )
-            ],
-          ),
-        )
-      ],
-    )),
+                Container(
+                    padding: EdgeInsets.all(5.0),
+                    child: RaisedButton(
+                      child: Text(
+                        answers[index]['tags'][0],
+                      ),
+                      onPressed: () {},
+                    ))
+              ],
+            ),
+          )
+        ],
+      )),
     );
   }
 
