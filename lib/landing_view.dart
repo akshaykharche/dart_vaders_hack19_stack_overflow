@@ -17,7 +17,7 @@ class _LandingPageState extends State<LandingPage> {
   FocusNode focusOnSearch = FocusNode();
   bool isSearchClicked = false;
 
-  List answers = [{}];
+  List questions = [{}];
 
   void _searchClick() {
     setState(() {
@@ -101,7 +101,7 @@ class _LandingPageState extends State<LandingPage> {
     );
   }
 
-  Widget _buildAnswerCard(BuildContext context, int index) {
+  Widget _buildQuestionCard(BuildContext context, int index) {
     return Container(
       padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Card(
@@ -115,7 +115,7 @@ class _LandingPageState extends State<LandingPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                _buildCounts(answers[index]),
+                _buildCounts(questions[index]),
                 Container(
                   padding: EdgeInsets.all(5.0),
                   width: 350.0,
@@ -125,10 +125,10 @@ class _LandingPageState extends State<LandingPage> {
                           context,
                           MaterialPageRoute(
                               builder: (BuildContext context) => DetailsView(
-                                  answers[index]['questionDetails'])));
+                                  questions[index]['questionDetails'])));
                     },
                     child: Text(
-                      answers[index]['title'],
+                      questions[index]['title'],
                       style:
                           TextStyle(color: Colors.blueAccent, fontSize: 14.0),
                     ),
@@ -138,7 +138,7 @@ class _LandingPageState extends State<LandingPage> {
                     padding: EdgeInsets.all(5.0),
                     child: RaisedButton(
                       child: Text(
-                        answers[index]['tags'][0],
+                        questions[index]['tags'][0],
                       ),
                       onPressed: () {},
                     ))
@@ -177,7 +177,7 @@ class _LandingPageState extends State<LandingPage> {
   }
 
   _buildBody(BuildContext context, List questionsData) {
-    answers = questionsData;
+    questions = questionsData;
 
     return Container(
         padding: EdgeInsets.all(15.0),
@@ -188,8 +188,8 @@ class _LandingPageState extends State<LandingPage> {
             _buildQuestionsHeader(),
             Expanded(
               child: ListView.builder(
-                itemBuilder: _buildAnswerCard, // _buildAnswerCard,
-                itemCount: answers.length,
+                itemBuilder: _buildQuestionCard,
+                itemCount: questions.length,
               ),
             )
           ],
