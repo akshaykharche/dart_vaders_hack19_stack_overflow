@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import './details_view.dart';
-import './votes.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -168,7 +167,7 @@ class _LandingPageState extends State<LandingPage> {
       width: double.infinity,
       padding: EdgeInsets.all(10.0),
       decoration: BoxDecoration(
-        color: Colors.grey,
+        color: Colors.orangeAccent,
       ),
       child: Text(
         'Latest Questions',
